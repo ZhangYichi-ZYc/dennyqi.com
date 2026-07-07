@@ -6,7 +6,7 @@ import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 
 const app = express()
-const PORT = 3001
+const PORT = 42210
 
 app.use(cors())
 app.use(express.json())
