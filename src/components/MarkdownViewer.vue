@@ -74,7 +74,8 @@ watch(
   flex: 1;
   min-height: calc(100vh - var(--header-height));
   padding: 40px 48px;
-  max-width: var(--content-max-width);
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .viewer-status {

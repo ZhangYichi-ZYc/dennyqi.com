@@ -101,8 +101,10 @@ onMounted(async () => {
     if (!res.ok) return
     const tree = await res.json()
     for (const cat of categories.value) {
+      // Tree names are stripped of number prefixes (e.g. "Physics" not "02 Physics")
+      const stripped = cat.path.replace(/^\d{2}\s*/, '')
       const match = (tree as Array<Record<string, unknown>>).find(
-        (n) => n.name === cat.path
+        (n) => n.name === stripped
       )
       if (match) {
         cat.count = countFiles(match)
