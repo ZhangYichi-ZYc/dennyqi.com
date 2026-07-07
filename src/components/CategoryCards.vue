@@ -15,9 +15,19 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import CategoryCard from './CategoryCard.vue'
 
-const categories = [
+interface CategoryDef {
+  id: string
+  name: string
+  icon: string
+  description: string
+  count: number
+  path: string
+}
+
+const categories = ref<CategoryDef[]>([
   {
     id: 'physics',
     name: '物理',
@@ -74,7 +84,34 @@ const categories = [
     count: 0,
     path: '09 Music',
   },
-]
+])
+
+function countFiles(node: Record<string, unknown>): number {
+  if (node.type === 'file') return 1
+  if (!node.children || !Array.isArray(node.children)) return 0
+  return (node.children as Array<Record<string, unknown>>).reduce(
+    (sum: number, child) => sum + countFiles(child),
+    0
+  )
+}
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/notes/tree')
+    if (!res.ok) return
+    const tree = await res.json()
+    for (const cat of categories.value) {
+      const match = (tree as Array<Record<string, unknown>>).find(
+        (n) => n.name === cat.path
+      )
+      if (match) {
+        cat.count = countFiles(match)
+      }
+    }
+  } catch {
+    // keep zeros on failure
+  }
+})
 </script>
 
 <style scoped>

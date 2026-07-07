@@ -56,14 +56,14 @@ function getPathFromRoute(): string | undefined {
   return segments.join('/')
 }
 
-// Load content when route changes
+// Load content when route changes — only if path points to a .md file
 watch(
   () => route.fullPath,
   () => {
     const p = getPathFromRoute()
     currentPath.value = p
     sidebarOpen.value = false
-    if (p) {
+    if (p && p.endsWith('.md')) {
       fetchContent(p)
     }
   },
