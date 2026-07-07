@@ -10,6 +10,8 @@ export default defineConfig({
     },
   },
   server: {
+    host: true,
+    allowedHosts: true,
     port: 42211,
     proxy: {
       '/api': {
