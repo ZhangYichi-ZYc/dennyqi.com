@@ -26,7 +26,8 @@ function protectMath(text: string): { text: string; blocks: string[] } {
   })
 
   // Replace $...$ inline math (not preceded/followed by $)
-  text = text.replace(/(?<!\$)\$(?!\$)([^$\n]+?)\$(?!\$)/g, (_, math) => {
+  // Allow newlines — some editors wrap long math expressions
+  text = text.replace(/(?<!\$)\$(?!\$)([^$]+?)\$(?!\$)/g, (_, math) => {
     blocks.push(`$${math}$`)
     return `${MATH_P}${blocks.length - 1}END`
   })
