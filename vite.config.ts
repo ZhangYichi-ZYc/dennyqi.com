@@ -3,7 +3,21 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    {
+      name: 'notes-spa-fallback',
+      configureServer(server) {
+        // Intercept /notes/ requests before Vite serves raw .md files from disk
+        server.middlewares.use((req, _res, next) => {
+          if (req.url?.startsWith('/notes/')) {
+            req.url = '/'
+          }
+          next()
+        })
+      },
+    },
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
