@@ -27,77 +27,19 @@
       <div
         class="article-body"
         v-html="content.html"
-        ref="articleBody"
       ></div>
     </article>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
 import type { NoteContent } from '@/types'
 
-const props = defineProps<{
+defineProps<{
   content: NoteContent | null
   loading: boolean
   error: string | null
 }>()
-
-const articleBody = ref<HTMLElement | null>(null)
-
-// Re-run KaTeX auto-render when content changes
-watch(
-  () => props.content?.html,
-  async () => {
-    if (!props.content?.html) return
-    await nextTick()
-    if (articleBody.value) {
-      try {
-        // Collect KaTeX macros from \newcommand and common shortcuts
-        const macros: Record<string, string> = {
-          '\\Q': '\\mathbb{Q}',
-          '\\R': '\\mathbb{R}',
-          '\\Z': '\\mathbb{Z}',
-          '\\N': '\\mathbb{N}',
-          '\\C': '\\mathbb{C}',
-          '\\l': '\\langle',
-          '\\r': '\\rangle',
-          '\\lang': '\\langle',
-          '\\rang': '\\rangle',
-        }
-
-        let html = articleBody.value.innerHTML
-
-        // Extract all \newcommand{\cmd}{def} and strip them
-        html = html.replace(
-          /\\newcommand\{(\\[^}]+)\}\{([^}]*)\}/g,
-          (_, cmd: string, def: string) => {
-            macros[cmd] = def
-            return ''
-          }
-        )
-
-        // Clean up empty math blocks left after \newcommand removal
-        html = html.replace(/\$\$\s*/g, '')
-
-        articleBody.value.innerHTML = html
-
-        const { default: renderMathInElement } = await import('katex/dist/contrib/auto-render.mjs')
-        renderMathInElement(articleBody.value, {
-          delimiters: [
-            { left: '$$', right: '$$', display: true },
-            { left: '$', right: '$', display: false },
-          ],
-          throwOnError: false,
-          // @ts-expect-error — macros is a valid KaTeX auto-render option, types are incomplete
-          macros,
-        })
-      } catch {
-        // KaTeX not available — math renders as raw text, acceptable
-      }
-    }
-  }
-)
 </script>
 
 <style scoped>
