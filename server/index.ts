@@ -14,26 +14,33 @@ app.use(express.json())
 const NOTES_ROOT = path.resolve(import.meta.dirname, '..', 'notes')
 
 // ---- Math protection: shield LaTeX from markdown-it ----
+const MATH_P = 'MATHBLOCK'
+
 function protectMath(text: string): { text: string; blocks: string[] } {
   const blocks: string[] = []
 
   // Replace $$...$$ display math first
   text = text.replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
     blocks.push(`$$${math}$$`)
-    return `\x00MATH${blocks.length - 1}\x00`
+    return `\n${MATH_P}${blocks.length - 1}END\n`
   })
 
   // Replace $...$ inline math (not preceded/followed by $)
   text = text.replace(/(?<!\$)\$(?!\$)([^$\n]+?)\$(?!\$)/g, (_, math) => {
     blocks.push(`$${math}$`)
-    return `\x00MATH${blocks.length - 1}\x00`
+    return `${MATH_P}${blocks.length - 1}END`
   })
 
   return { text, blocks }
 }
 
 function restoreMath(html: string, blocks: string[]): string {
-  return html.replace(/\x00MATH(\d+)\x00/g, (_, i) => blocks[parseInt(i)])
+  // markdown-it may wrap the placeholder in <p> tags or add HTML entities
+  // First undo any HTML-wrapping around display math placeholders
+  html = html.replace(new RegExp(`<p>${MATH_P}(\\d+)END</p>`, 'g'), (_, i) => blocks[parseInt(i)])
+  // Then handle any remaining (inline) placeholders
+  html = html.replace(new RegExp(`${MATH_P}(\\d+)END`, 'g'), (_, i) => blocks[parseInt(i)])
+  return html
 }
 
 // ---- Markdown renderer ----
