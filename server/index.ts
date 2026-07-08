@@ -13,6 +13,29 @@ app.use(express.json())
 
 const NOTES_ROOT = path.resolve(import.meta.dirname, '..', 'notes')
 
+// ---- Math protection: shield LaTeX from markdown-it ----
+function protectMath(text: string): { text: string; blocks: string[] } {
+  const blocks: string[] = []
+
+  // Replace $$...$$ display math first
+  text = text.replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
+    blocks.push(`$$${math}$$`)
+    return `\x00MATH${blocks.length - 1}\x00`
+  })
+
+  // Replace $...$ inline math (not preceded/followed by $)
+  text = text.replace(/(?<!\$)\$(?!\$)([^$\n]+?)\$(?!\$)/g, (_, math) => {
+    blocks.push(`$${math}$`)
+    return `\x00MATH${blocks.length - 1}\x00`
+  })
+
+  return { text, blocks }
+}
+
+function restoreMath(html: string, blocks: string[]): string {
+  return html.replace(/\x00MATH(\d+)\x00/g, (_, i) => blocks[parseInt(i)])
+}
+
 // ---- Markdown renderer ----
 const md = new MarkdownIt({
   html: true,
@@ -113,7 +136,9 @@ app.get('/api/notes/content', (req, res) => {
     }
 
     const raw = fs.readFileSync(fullPath, 'utf-8')
-    const html = md.render(raw)
+    const { text: protectedText, blocks } = protectMath(raw)
+    let html = md.render(protectedText)
+    html = restoreMath(html, blocks)
 
     // Derive category from directory path
     const dirParts = path.dirname(notePath).split(path.sep)

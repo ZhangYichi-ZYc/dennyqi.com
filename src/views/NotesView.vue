@@ -23,8 +23,8 @@
 
       <MarkdownViewer
         :content="content"
-        :loading="loading"
-        :error="error"
+        :loading="contentLoading"
+        :error="contentError"
       />
     </div>
 
@@ -43,7 +43,7 @@ import { useNotes } from '@/composables/useNotes'
 
 const route = useRoute()
 const router = useRouter()
-const { content, loading, error, fetchContent } = useNotes()
+const { content, contentLoading, contentError, fetchContent } = useNotes()
 
 const sidebarOpen = ref(false)
 const currentPath = ref<string | undefined>(undefined)

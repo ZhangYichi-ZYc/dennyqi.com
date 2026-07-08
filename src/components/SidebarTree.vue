@@ -5,8 +5,8 @@
       <h3 class="sidebar-title">笔记目录</h3>
     </div>
 
-    <div v-if="loading" class="sidebar-status">加载中...</div>
-    <div v-else-if="error" class="sidebar-status error">{{ error }}</div>
+    <div v-if="treeLoading" class="sidebar-status">加载中...</div>
+    <div v-else-if="treeError" class="sidebar-status error">{{ treeError }}</div>
 
     <nav v-else class="tree-nav">
       <TreeNode
@@ -34,7 +34,7 @@ defineEmits<{
   select: [path: string]
 }>()
 
-const { tree, loading, error, fetchTree } = useNotes()
+const { tree, treeLoading, treeError, fetchTree } = useNotes()
 
 onMounted(() => {
   fetchTree()
