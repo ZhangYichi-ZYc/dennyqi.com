@@ -164,6 +164,18 @@ app.get('/api/notes/content', (req, res) => {
   }
 })
 
+
+	// ---- Production static serving + SPA fallback ----
+	const DIST_DIR = path.resolve(import.meta.dirname, '..', 'dist')
+	if (fs.existsSync(DIST_DIR)) {
+	  app.use(express.static(DIST_DIR))
+	  // SPA fallback: all non-API routes return index.html
+	  app.get('*', (_req, res) => {
+	    res.sendFile(path.join(DIST_DIR, 'index.html'))
+	  })
+	  console.log(`Serving frontend from ${DIST_DIR}`)
+	}
+
 app.listen(PORT, () => {
   console.log(`Notes API server running at http://localhost:${PORT}`)
 })
