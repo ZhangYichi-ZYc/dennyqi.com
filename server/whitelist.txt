@@ -1,0 +1,3 @@
+# 笔记白名单 — 以下路径无需密码即可访问
+# 每行一个路径，相对于 notes 目录根
+# 示例: 03 Mathematics/Measure Theory/02 勒贝格积分.md

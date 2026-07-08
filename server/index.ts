@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import fs from 'node:fs'
 import path from 'node:path'
+import crypto from 'node:crypto'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkMath from 'remark-math'
@@ -19,6 +20,53 @@ app.use(cors())
 app.use(express.json())
 
 const NOTES_ROOT = path.resolve(import.meta.dirname, '..', 'notes')
+
+// ---- Auth ----
+const PASSWORD_FILE = path.resolve(import.meta.dirname, '.password')
+const WHITELIST_FILE = path.resolve(import.meta.dirname, 'whitelist.txt')
+const CORRECT_PASSWORD = fs.readFileSync(PASSWORD_FILE, 'utf-8').trim()
+
+let whitelist: Set<string> = new Set()
+function loadWhitelist() {
+  try {
+    const raw = fs.readFileSync(WHITELIST_FILE, 'utf-8')
+    whitelist = new Set(
+      raw.split('\n')
+        .map(l => l.trim())
+        .filter(l => l && !l.startsWith('#'))
+    )
+  } catch {
+    whitelist = new Set()
+  }
+}
+loadWhitelist()
+
+// Active tokens: token → timestamp
+const tokens = new Map<string, number>()
+const TOKEN_TTL = 24 * 60 * 60 * 1000 // 24 hours
+
+function createToken(): string {
+  return crypto.randomBytes(32).toString('hex')
+}
+
+// Check if a note path is whitelisted
+function isWhitelisted(notePath: string): boolean {
+  return whitelist.has(notePath)
+}
+
+// Auth check for protected content
+function checkAuth(req: express.Request): boolean {
+  const auth = req.headers.authorization
+  if (!auth?.startsWith('Bearer ')) return false
+  const token = auth.slice(7)
+  const ts = tokens.get(token)
+  if (!ts) return false
+  if (Date.now() - ts > TOKEN_TTL) {
+    tokens.delete(token)
+    return false
+  }
+  return true
+}
 
 // ---- Markdown → HTML pipeline (unified + remark + rehype) ----
 // Mirrors NextChat's approach: AST-level math handling avoids regex issues
@@ -102,6 +150,18 @@ function stripNumberPrefix(name: string): string {
 
 // ---- API Routes ----
 
+// POST /api/auth — validate password, return token
+app.post('/api/auth', (req, res) => {
+  const { password } = req.body
+  if (password === CORRECT_PASSWORD) {
+    const token = createToken()
+    tokens.set(token, Date.now())
+    res.json({ token })
+  } else {
+    res.status(401).json({ error: 'Invalid password' })
+  }
+})
+
 // GET /api/notes/tree
 app.get('/api/notes/tree', (_req, res) => {
   try {
@@ -119,6 +179,12 @@ app.get('/api/notes/content', async (req, res) => {
     const notePath = req.query.path as string
     if (!notePath) {
       res.status(400).json({ error: 'Missing path parameter' })
+      return
+    }
+
+    // Auth: skip for whitelisted paths
+    if (!isWhitelisted(notePath) && !checkAuth(req)) {
+      res.status(401).json({ error: 'Authentication required' })
       return
     }
 
