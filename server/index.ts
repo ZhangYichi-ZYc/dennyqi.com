@@ -4,6 +4,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
+import markdownItSub from 'markdown-it-sub'
+import markdownItSup from 'markdown-it-sup'
+import markdownItMark from 'markdown-it-mark'
 
 const app = express()
 const PORT = 42210
@@ -32,15 +35,30 @@ function protectMath(text: string): { text: string; blocks: string[] } {
     return `${MATH_P}${blocks.length - 1}END`
   })
 
+  // Replace \(...\) and \[...\] LaTeX delimiters (Typora)
+  text = text.replace(/\\\[([\s\S]*?)\\\]/g, (_, math) => {
+    blocks.push(`$$${math}$$`)
+    return `\n${MATH_P}${blocks.length - 1}END\n`
+  })
+  text = text.replace(/\\\(([\s\S]*?)\\\)/g, (_, math) => {
+    blocks.push(`$${math}$`)
+    return `${MATH_P}${blocks.length - 1}END`
+  })
+
+  // Convert \newline to literal newline for hard breaks (Typora)
+  text = text.replace(/\\newline/g, '\n')
+
   return { text, blocks }
 }
 
 function restoreMath(html: string, blocks: string[]): string {
   // markdown-it may wrap the placeholder in <p> tags or add HTML entities
   // First undo any HTML-wrapping around display math placeholders
-  html = html.replace(new RegExp(`<p>${MATH_P}(\\d+)END</p>`, 'g'), (_, i) => blocks[parseInt(i)])
+  html = html.replace(new RegExp(`<p>${MATH_P}(\\d+)END</p>`, 'g'), (_, i) => blocks[parseInt(i)] || '')
   // Then handle any remaining (inline) placeholders
-  html = html.replace(new RegExp(`${MATH_P}(\\d+)END`, 'g'), (_, i) => blocks[parseInt(i)])
+  html = html.replace(new RegExp(`${MATH_P}(\\d+)END`, 'g'), (_, i) => blocks[parseInt(i)] || '')
+  // Cleanup: remove any still-unrestored placeholders (from malformed source math)
+  html = html.replace(new RegExp(`${MATH_P}\\d+END`, 'g'), '')
   return html
 }
 
@@ -61,6 +79,11 @@ const md = new MarkdownIt({
     return '' // use external highlight
   },
 })
+
+// Typora extensions
+md.use(markdownItSub)    // H~2~O → subscript
+md.use(markdownItSup)    // X^2^ → superscript
+md.use(markdownItMark)   // ==key== → highlight
 
 // ---- Excluded directory names ----
 const EXCLUDE_DIRS = new Set(['tmp', 'old', 'word', '练习题'])
