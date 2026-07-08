@@ -23,7 +23,7 @@ defineProps<{
 <style scoped>
 .category-card {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   padding: 24px;
   background: var(--bg-card);
