@@ -30,7 +30,10 @@
       :style="{ paddingLeft: depth * 16 + 24 + 'px' }"
       @click="$emit('select', node.path!)"
     >
-      <span class="node-name file">{{ node.name }}</span>
+      <span class="node-name file">
+        <span v-if="node.isProtected" class="lock-icon">🔒</span>
+        {{ node.name }}
+      </span>
     </button>
   </div>
 </template>
@@ -116,5 +119,11 @@ const expanded = ref(false)
   color: var(--accent-deep);
   background: var(--bg-warm);
   font-weight: 500;
+}
+
+.lock-icon {
+  font-size: 0.7rem;
+  margin-right: 4px;
+  opacity: 0.6;
 }
 </style>

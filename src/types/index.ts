@@ -3,6 +3,7 @@ export interface NoteNode {
   type: 'directory' | 'file'
   path?: string
   children?: NoteNode[]
+  isProtected?: boolean
 }
 
 export interface NoteContent {

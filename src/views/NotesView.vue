@@ -34,6 +34,7 @@
     <PasswordDialog
       v-if="showPasswordDialog"
       @authenticated="onAuthenticated"
+      @close="showPasswordDialog = false"
     />
   </div>
 </template>

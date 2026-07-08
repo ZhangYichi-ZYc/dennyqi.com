@@ -107,6 +107,7 @@ interface NoteNode {
   type: 'directory' | 'file'
   path?: string
   children?: NoteNode[]
+  isProtected?: boolean
 }
 
 function buildTree(dirPath: string): NoteNode[] {
@@ -131,6 +132,7 @@ function buildTree(dirPath: string): NoteNode[] {
         name: stripNumberPrefix(entry.name.replace(/\.md$/, '')),
         type: 'file',
         path: relativePath,
+        isProtected: !isWhitelisted(relativePath),
       })
     }
   }

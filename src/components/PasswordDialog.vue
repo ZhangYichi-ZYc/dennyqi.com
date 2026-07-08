@@ -1,6 +1,7 @@
 <template>
   <div class="pw-overlay">
     <div class="pw-card">
+      <button class="pw-close" @click="$emit('close')" title="关闭">✕</button>
       <h2 class="pw-title">需要密码</h2>
       <p class="pw-hint">此笔记需要验证密码才能访问</p>
       <form class="pw-form" @submit.prevent="submit">
@@ -22,10 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const emit = defineEmits<{
   authenticated: [token: string]
+  close: []
 }>()
 
 const password = ref('')
@@ -33,9 +35,15 @@ const loading = ref(false)
 const errorMsg = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
 
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') emit('close')
+}
+
 onMounted(() => {
   inputRef.value?.focus()
+  document.addEventListener('keydown', onKeydown)
 })
+onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 
 async function submit() {
   if (!password.value.trim()) return
@@ -77,6 +85,7 @@ async function submit() {
 }
 
 .pw-card {
+  position: relative;
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-light);
@@ -150,5 +159,28 @@ async function submit() {
 .pw-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.pw-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
+}
+
+.pw-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-warm);
 }
 </style>
