@@ -50,7 +50,7 @@
 
 再考虑$\ALG$。假设共有$p$个active的server将会移动，且恰好都移动$d$步。考虑$\Delta S$，inactive的server之间两两距离不变；考虑每对active的和inactive的server之间的距离差之和，枚举inactive的server，在一个inactive的server到根节点的链上有且仅有一个active的server，其余$p-1$个active server都在$x$的其它子树上，因此它产生的$S$变化的贡献为$d-(p-1)d$，共有$k-p$个inactive的节点，因此贡献和为$(k-p)(2-p)d$；对于active的和active之间，两两距离减少$2d$，因此总变化量为$-2d\dbinom{p}{2}=-p(p-1)d$。综上，$\Delta S = (2k-pk-p)d$。再考虑$\Delta M$，假设每个$s_i$依然匹配着上一轮的$o_i$，并让最终会到达根节点的那个$s_i$新去匹配位于根节点的那个$o_i$（我们选定了一个特殊的matching，这样会把结果放大），那么$M$至少增大$-d+(p-1)d$。
 
-综上，$\Delta \Phi\leq k\cdot cost(\OPT)+k(p-2)cost(\ALG)+(2k-pk-p)cost(\ALG)$$=k\cdot cost(\OPT)-p\cdot cost(\ALG)$。因为$p\geq 1$，因此$\Delta \Phi \leq k\cdot cost(\OPT)-cost(\ALG)$，证毕。
+综上，$\Delta \Phi\leq k\cdot cost(\OPT)+k(p-2)cost(\ALG)+(2k-pk-p)cost(\ALG)$ $=k\cdot cost(\OPT)-p\cdot cost(\ALG)$。因为$p\geq 1$，因此$\Delta \Phi \leq k\cdot cost(\OPT)-cost(\ALG)$，证毕。
 
 ## Weighted Paging
 

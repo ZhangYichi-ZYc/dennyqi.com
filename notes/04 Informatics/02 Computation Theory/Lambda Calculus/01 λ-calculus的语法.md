@@ -60,7 +60,7 @@ compatibility意味着我们总是可以用根据等式的局部替换来rewrite
 
 根据$\beta$-conversion，$\lambda x M$可以看作“一元函数”。如果要表示“二元函数”，可以用$\lambda x(\lambda y M)$的形式。这是因为当一个二元函数apply在两个term上时，可以看作该二元函数首先apply在第一个term上得到了一个一元函数，这个一元函数再apply在第二个term上得到了函数值。这种把多元函数拆分成多个一元函数的想法最早是由H.B. Curry提出的，称为函数的柯里化(Currying)。
 
-记$F\equiv\l x(\l y M)$，它apply在$N_1,N_2$上时应当写作$(FN_1)N_2$，这样就会有$(FN_1)N_2\equiv((\l x(\l y M))N_1)N_2=(\l y (M[x:=N_1]))(N_2)$$=(M[x:=N_1])[y:=N_2]$。一般地，如果$F$是$n$元函数，它apply在$N_1,\cdots,N_n$时应当写作$( \cdots((FN_1)N_2)\cdots N_n)$。方便起见，我们规定apply是左结合的，这样我们就可以在表示多元函数时省略括号，写为$FN_1N_2\cdots N_n$。
+记$F\equiv\l x(\l y M)$，它apply在$N_1,N_2$上时应当写作$(FN_1)N_2$，这样就会有$(FN_1)N_2\equiv((\l x(\l y M))N_1)N_2=(\l y (M[x:=N_1]))(N_2)$ $=(M[x:=N_1])[y:=N_2]$。一般地，如果$F$是$n$元函数，它apply在$N_1,\cdots,N_n$时应当写作$( \cdots((FN_1)N_2)\cdots N_n)$。方便起见，我们规定apply是左结合的，这样我们就可以在表示多元函数时省略括号，写为$FN_1N_2\cdots N_n$。
 
 在函数本身的表示上，对于二元函数我们写$\l x_1(\l x_2 M)$，对于$n$元函数我们写$\l x_1(\l x_2(\l x_3(\cdots (\l x_nM))))$。所以，多个$\l x_i$之间是右结合的，不能省略括号。为了方便，我们发明下面的符号来简化书写：只写一个$\l$，然后把变量并排依次写出，然后写一个点，然后写函数体，这样$n$元函数简写为$\l x_1x_2\cdots x_n.M$。
 

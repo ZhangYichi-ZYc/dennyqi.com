@@ -66,7 +66,7 @@ $\Omega$中的每一个元素本身就可以单独构成一个事件（集合）
 
 两个互相独立的事件其中一个在另一个的条件下发生的概率应该就是它本身发生的概率，代入验证这确实成立：由于$\Pr(A \cap B)=\Pr(A) \cdot \Pr(B)$恰好得到$\Pr(A|B)=\dfrac{\Pr(A \cap B)}{\Pr(B)}=\dfrac{\Pr(A)\Pr(B)}{\Pr(B)}=\Pr(A)$。这也是我们理解独立的一种方法，两事件独立等价于其中一个在另一个发生下的条件概率就是它自己，这表明$A,B$是“没有关系”的。
 
-我们可以把条件概率的等式变形为$\Pr(A\cap B) = \Pr(A|B) \cdot \Pr(B)$。于是我们能够得到一个求解事件的交集的概率的链式法则：$\Pr(A_1 \cap \cdots \cap A_n)$$=\Pr(A_n|A_1 \cap \cdots \cap A_{n-1}) \cdot \Pr(A_1 \cap \cdots \cap A_{n-1})$$=\cdots$$=\Pr(A_1)\cdot \Pr(A_2 | A_1)\cdot \Pr(A_3|A_1 \cap A_2) \cdots \cap \Pr(A_{n-1}|A_1 \cap \cdots \cap A_{n-2})\cdot\Pr(A_n|A_1 \cap \cdots \cap A_{n-1})$。它在直观上似乎更好理解，因为所有事件同时发生的概率可以写作“第一个事件发生的概率乘上在第一个事件发生的条件下第二个事件发生的概率乘上第一个事件和第二个事件都发生的条件下第三个事件发生的概率……”
+我们可以把条件概率的等式变形为$\Pr(A\cap B) = \Pr(A|B) \cdot \Pr(B)$。于是我们能够得到一个求解事件的交集的概率的链式法则：$\Pr(A_1 \cap \cdots \cap A_n)$ $=\Pr(A_n|A_1 \cap \cdots \cap A_{n-1}) \cdot \Pr(A_1 \cap \cdots \cap A_{n-1})$$=\cdots$ $=\Pr(A_1)\cdot \Pr(A_2 | A_1)\cdot \Pr(A_3|A_1 \cap A_2) \cdots \cap \Pr(A_{n-1}|A_1 \cap \cdots \cap A_{n-2})\cdot\Pr(A_n|A_1 \cap \cdots \cap A_{n-1})$。它在直观上似乎更好理解，因为所有事件同时发生的概率可以写作“第一个事件发生的概率乘上在第一个事件发生的条件下第二个事件发生的概率乘上第一个事件和第二个事件都发生的条件下第三个事件发生的概率……”
 
 > Birthday Paradox
 >
@@ -126,13 +126,13 @@ $\forall A, \Pr(A)=\sum\limits_{i=1}^{n}\Pr(A \cap B_i)$。
 
 根据全概率公式$\Pr(A)=\sum\limits_{i=1}^{n}\Pr(A \cap B_i)$可以验证全期望公式$E[X]=\sum\limits_{i=1}^{n}E[X|A_i]\Pr[A_i]$。
 
-根据定义证明：$E[X]=\sum\limits_{i=1}^{n}\left(\Pr[A_i]\sum\limits_{x}x\Pr(X=x|A_i)\right)=\sum\limits_{i=1}^{n}\left(\sum\limits_{x}x\Pr(X=x|A_i)\Pr[A_i]\right)$$=\sum\limits_{i=1}^{n}\sum\limits_{x}x\Pr(X=x \cap A_i)=\sum\limits_{x}x\left(\sum\limits_{i=1}^{n}\Pr(X=x \cap A_i)\right)=\sum\limits_{x}x\Pr(X=x)$。
+根据定义证明：$E[X]=\sum\limits_{i=1}^{n}\left(\Pr[A_i]\sum\limits_{x}x\Pr(X=x|A_i)\right)=\sum\limits_{i=1}^{n}\left(\sum\limits_{x}x\Pr(X=x|A_i)\Pr[A_i]\right)$ $=\sum\limits_{i=1}^{n}\sum\limits_{x}x\Pr(X=x \cap A_i)=\sum\limits_{x}x\left(\sum\limits_{i=1}^{n}\Pr(X=x \cap A_i)\right)=\sum\limits_{x}x\Pr(X=x)$。
 
 ### Markov不等式
 
 概率与期望之间的大小关系有一个直接的必然联系：设随机变量$X \geq 0$，则$\forall a>0,\Pr[X \geq a]\leq\dfrac{E[X]}{a}$。这称为Markov不等式。
 
-根据期望定义，$E[X]=\sum\limits_{x}x\Pr[X=x]=\sum\limits_{x<a}x\Pr[X=x]+\sum\limits_{x \geq a}x\Pr[X=x]$$\geq \sum\limits_{x \geq a}x\Pr[X=x] \geq \sum\limits_{x \geq a}a\Pr[X=x]\geq a\Pr[X \geq a]$。证毕。
+根据期望定义，$E[X]=\sum\limits_{x}x\Pr[X=x]=\sum\limits_{x<a}x\Pr[X=x]+\sum\limits_{x \geq a}x\Pr[X=x]$ $\geq \sum\limits_{x \geq a}x\Pr[X=x] \geq \sum\limits_{x \geq a}a\Pr[X=x]\geq a\Pr[X \geq a]$。证毕。
 
 ### 二项分布
 

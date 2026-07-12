@@ -32,7 +32,7 @@
 
 由于可逆机的效率与可逆机的设计无关，我们可以假设可逆机就是我们刚才用来实现卡诺循环的理想气体气缸。这是由特殊性推一般性的一种办法，因为通过理想气体实现的可逆机的效率一定代表了所有可逆机的效率。
 
-对于理想气体，内能仅取决于分子的动能，因此只取决于温度与分子数。在$a\to b$的过程中，分子数不变温度也不变，因此内能不变，气体对外做功$W$等于热量的流入$Q_1$。其中，$W=\displaystyle\int_a^b PdV$，而$P=\dfrac{NkT_1}{V}$，因此$W=\displaystyle\int_a^b NkT_1\dfrac{dV}{V}$$=NkT_1[\ln V]_a^b=NkT_1\ln\dfrac{V_b}{V_a}=Q_1$。同理，$Q_2=NkT_2\ln\dfrac{V_c}{V_d}$。我们只需找出$Q_1,Q_2$间的关系，也即$\dfrac{V_b}{V_a}$与$\dfrac{V_c}{V_d}$之间的关系。显然这个关系是由绝热膨胀给出的，$P_bV_b^\gamma=P_cV_c^\gamma$，$P_aV_a^\gamma=P_dV_d^\gamma$，因此$\dfrac{P_bV_b^\gamma}{P_aV_a^\gamma}=\dfrac{P_cV_c^\gamma}{P_dV_d^\gamma}$，代入$PV=NkT$得$\dfrac{T_1V_b^{\gamma-1}}{T_1V_a^{\gamma-1}}=\dfrac{T_2V_c^{\gamma-1}}{T_2V_d^{\gamma-1}}$。所以$\dfrac{V_b}{V_a}=\dfrac{V_c}{V_d}$。代入$Q_1,Q_2$得到$\dfrac{Q_1}{Q_2}=\dfrac{T_1}{T_2}$。这就是我们要找的函数！流入与流出的热量之比一定等于温度之比，因此效率$\eta=\dfrac{W}{Q_1}=\dfrac{Q_1-Q_2}{Q_1}=\dfrac{T_1-T_2}{T_1}$。这对于任何可逆机都成立。
+对于理想气体，内能仅取决于分子的动能，因此只取决于温度与分子数。在$a\to b$的过程中，分子数不变温度也不变，因此内能不变，气体对外做功$W$等于热量的流入$Q_1$。其中，$W=\displaystyle\int_a^b PdV$，而$P=\dfrac{NkT_1}{V}$，因此$W=\displaystyle\int_a^b NkT_1\dfrac{dV}{V}$ $=NkT_1[\ln V]_a^b=NkT_1\ln\dfrac{V_b}{V_a}=Q_1$。同理，$Q_2=NkT_2\ln\dfrac{V_c}{V_d}$。我们只需找出$Q_1,Q_2$间的关系，也即$\dfrac{V_b}{V_a}$与$\dfrac{V_c}{V_d}$之间的关系。显然这个关系是由绝热膨胀给出的，$P_bV_b^\gamma=P_cV_c^\gamma$，$P_aV_a^\gamma=P_dV_d^\gamma$，因此$\dfrac{P_bV_b^\gamma}{P_aV_a^\gamma}=\dfrac{P_cV_c^\gamma}{P_dV_d^\gamma}$，代入$PV=NkT$得$\dfrac{T_1V_b^{\gamma-1}}{T_1V_a^{\gamma-1}}=\dfrac{T_2V_c^{\gamma-1}}{T_2V_d^{\gamma-1}}$。所以$\dfrac{V_b}{V_a}=\dfrac{V_c}{V_d}$。代入$Q_1,Q_2$得到$\dfrac{Q_1}{Q_2}=\dfrac{T_1}{T_2}$。这就是我们要找的函数！流入与流出的热量之比一定等于温度之比，因此效率$\eta=\dfrac{W}{Q_1}=\dfrac{Q_1-Q_2}{Q_1}=\dfrac{T_1-T_2}{T_1}$。这对于任何可逆机都成立。
 
 ### 熵
 

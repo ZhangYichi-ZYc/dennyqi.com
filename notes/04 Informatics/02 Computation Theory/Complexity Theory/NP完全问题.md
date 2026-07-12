@@ -18,9 +18,9 @@ SAT问题是一个NP-complete问题。合取范式(CNF)由若干个括号由$\we
 
 3-SAT问题是一个特殊的SAT问题，它要求输入的CNF的每个括号里都恰好只有3个布尔变量。显然有3-SAT$\leq_T^P$SAT，我们想证明SAT $\leq_T^P$ 3-SAT。
 
-这里用到一个关键的技巧：当$x_i$任取时，一定存在一个$y$使得$(x_1 \vee x_2 \vee x_3 \vee x_4)$$=(x_1 \vee x_2 \vee y) \wedge (\neg y \vee x_3 \vee x_4)$。如果$y=0$，那么RHS等价于$(x_1 \vee x_2)$，如果$y=1$，那么RHS等价于$(x_3 \vee x_4)$。意思是说，如果LHS=1，那么要么$x_1,x_2$中有1要么$x_3,x_4$中有1。对于前者，只需取$y=1$，对于后者，只需取$y=0$；如果LHS=0，只需取$y=0$，就有RHS=0。
+这里用到一个关键的技巧：当$x_i$任取时，一定存在一个$y$使得$(x_1 \vee x_2 \vee x_3 \vee x_4)$ $=(x_1 \vee x_2 \vee y) \wedge (\neg y \vee x_3 \vee x_4)$。如果$y=0$，那么RHS等价于$(x_1 \vee x_2)$，如果$y=1$，那么RHS等价于$(x_3 \vee x_4)$。意思是说，如果LHS=1，那么要么$x_1,x_2$中有1要么$x_3,x_4$中有1。对于前者，只需取$y=1$，对于后者，只需取$y=0$；如果LHS=0，只需取$y=0$，就有RHS=0。
 
-一般地，一定存在$y_i$的取值使得：$(x_1 \vee x_2 \vee \cdots \vee x_k)=(x_1 \vee x_2 \vee y_1) \wedge (\neg y_1 \vee x_3 \vee y_2) \wedge (\neg y_2 \vee x_4 \vee y_3)$$\wedge \cdots \wedge (\neg y_{k-3} \vee x_{k-1} \vee x_k)$。意思是说，如果LHS=1，那么分类讨论：如果$x_1,x_2$中有1，那么取$y_1=0,y_i=0$；否则，如果$x_3=1$，那么取$y_1=1,y_2=0,y_i=0$；如果$x_4=1$，那么取$y_2=1,y_1=1,y_3=0,y_i=0$；如果$x_p=1$，那么取$y_1\cdots y_{p-2}=1$，$y_{p-1}\cdots y_{k-3}=0$；如果$x_{k-1},x_k$中有1，那么取$y$全都取1。如果LHS=0，那么只需取$y_1=0$，就有RHS=0。
+一般地，一定存在$y_i$的取值使得：$(x_1 \vee x_2 \vee \cdots \vee x_k)=(x_1 \vee x_2 \vee y_1) \wedge (\neg y_1 \vee x_3 \vee y_2) \wedge (\neg y_2 \vee x_4 \vee y_3)$ $\wedge \cdots \wedge (\neg y_{k-3} \vee x_{k-1} \vee x_k)$。意思是说，如果LHS=1，那么分类讨论：如果$x_1,x_2$中有1，那么取$y_1=0,y_i=0$；否则，如果$x_3=1$，那么取$y_1=1,y_2=0,y_i=0$；如果$x_4=1$，那么取$y_2=1,y_1=1,y_3=0,y_i=0$；如果$x_p=1$，那么取$y_1\cdots y_{p-2}=1$，$y_{p-1}\cdots y_{k-3}=0$；如果$x_{k-1},x_k$中有1，那么取$y$全都取1。如果LHS=0，那么只需取$y_1=0$，就有RHS=0。
 
 于是对于任何SAT问题， 我们做这样的替换，就能把它转变成3-SAT问题。即SAT $\leq_T^P$ 3-SAT。因此SAT和3-SAT之间可以互相归约——它们是等价的！
 

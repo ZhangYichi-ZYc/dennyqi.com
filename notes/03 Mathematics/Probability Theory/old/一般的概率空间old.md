@@ -31,7 +31,7 @@ $\newcommand{\B}{\mathcal{B}}$样本集$[0,1]$上常用的一个事件集是$\ma
 ②$P(\Omega)=1$；
 ③对于至多可数个互不相交的事件序列$A_1,A_2,\cdots$，$P(\bigcup\limits_{i\geq 1} A_i)=\sum\limits_{i\geq 1} P(A_i)$。
 
-由此可见，如果$A \subseteq B$，那么$P(B)=P(A)+P(B\setminus A)\geq P(A)$。把它拓展为无穷情形下，如果$A_1 \subseteq A_2 \subseteq A_3 \cdots$，那么$P(A_1) \leq P(A_2) \leq P(A_3)\leq \cdots$。所以$P(A_i)$构成一个单调数列，并且有上界$1$。那么根据单调有界收敛定理，极限$\lim\limits_{n \to \infty}P(A_n)$存在。同时$\lim\limits_{n\to\infty}P(\bigcup\limits_{i=1}^{n}A_i)=P(\bigcup\limits_{i=1}^{\infty}A_i)$$=P(A_1)+\sum\limits_{i=2}^{\infty}P(A_i \backslash A_{i-1})$$=P(A_1)+$$\lim\limits_{n\to\infty}\sum\limits_{i=2}^{n}[P(A_i)-P(A_{i-1})]$$=\lim\limits_{n\to\infty}P(A_n)$，因此$\lim\limits_{n\to\infty}P(A_n)=P(\lim\limits_{n\to\infty}\bigcup\limits_{i=1}^{n}A_i)$，这称为概率测度的连续性（在分析学中“连续”就是指极限符号可交换）。
+由此可见，如果$A \subseteq B$，那么$P(B)=P(A)+P(B\setminus A)\geq P(A)$。把它拓展为无穷情形下，如果$A_1 \subseteq A_2 \subseteq A_3 \cdots$，那么$P(A_1) \leq P(A_2) \leq P(A_3)\leq \cdots$。所以$P(A_i)$构成一个单调数列，并且有上界$1$。那么根据单调有界收敛定理，极限$\lim\limits_{n \to \infty}P(A_n)$存在。同时$\lim\limits_{n\to\infty}P(\bigcup\limits_{i=1}^{n}A_i)=P(\bigcup\limits_{i=1}^{\infty}A_i)$ $=P(A_1)+\sum\limits_{i=2}^{\infty}P(A_i \backslash A_{i-1})$$=P(A_1)+$ $\lim\limits_{n\to\infty}\sum\limits_{i=2}^{n}[P(A_i)-P(A_{i-1})]$$=\lim\limits_{n\to\infty}P(A_n)$，因此$\lim\limits_{n\to\infty}P(A_n)=P(\lim\limits_{n\to\infty}\bigcup\limits_{i=1}^{n}A_i)$，这称为概率测度的连续性（在分析学中“连续”就是指极限符号可交换）。
 
 以下在离散情形下满足的概率公式在新的概率测度的定义下依然满足（因为新的概率测度的定义和原来并没有本质区别）：全概率公式，假如$A_i$是$\Omega$的一个分划，则$\forall B \in \mathcal{F}$，$P(B)=\sum\limits_{i}P(B \cap A_i)$；Union Bound，$P(A\cup B)\le P(A)+P(B)$，推广到可数并$P(\bigcup\limits_{i\in I}A_i)\le \sum\limits_{i\in I}P(A_i)$；概率意义下的容斥原理$P(\bigcup\limits_{i=1}^n A_i)=\sum\limits_{\varnothing\neq J\subseteq [n]}(-1)^{|J|+1}P(\bigcap\limits_{j\in J}A_j)$。
 
@@ -47,7 +47,7 @@ $\newcommand{\B}{\mathcal{B}}$样本集$[0,1]$上常用的一个事件集是$\ma
 
 ？？？
 
-正是因为$[0,1]$上均匀选取一个点这样的概率空间不存在，我们才发展了Borel Set这一工具，把概率空间定义为$([0,1],B([0,1]),P)$，那么如何选取$P$呢？根据直观，概率测度应当满足$P([a,b])=P((a,b))$$=P([a,b))=P((a,b])=b-a$。我们可以证明（根据测度扩展定理，但证明很复杂，略）这样的测度是存在的，这称为<u>勒贝格测度</u>(Lebesgue Measure)。这样我们就完善地定义了一个样本集为$\R$（或等价的，$[0,1]$区间）的概率空间。
+正是因为$[0,1]$上均匀选取一个点这样的概率空间不存在，我们才发展了Borel Set这一工具，把概率空间定义为$([0,1],B([0,1]),P)$，那么如何选取$P$呢？根据直观，概率测度应当满足$P([a,b])=P((a,b))$ $=P([a,b))=P((a,b])=b-a$。我们可以证明（根据测度扩展定理，但证明很复杂，略）这样的测度是存在的，这称为<u>勒贝格测度</u>(Lebesgue Measure)。这样我们就完善地定义了一个样本集为$\R$（或等价的，$[0,1]$区间）的概率空间。
 
 
 

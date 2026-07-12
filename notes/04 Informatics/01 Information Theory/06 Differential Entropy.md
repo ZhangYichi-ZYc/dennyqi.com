@@ -6,7 +6,7 @@
 
 微分熵并不描述一个随机变量所包含的“信息量”。事实上，我们不可能沿用与离散时相同的方法来描述连续随机变量的信息量。试想要描述一个在$[0,1]$上均匀分布的连续随机变量$X$需要多少位？这样的连续随机变量可以用一列$X_1,\cdots,X_n,\cdots$分别描述小数点后的某一位，每个$X_i$都在$[9]$上均匀取值，这样$X$的信息量就等于所有的$H(X_i)$求和，得到正无穷。也就是说，一个连续随机变量的离散信息量是无穷的，需要无穷位才能描述。
 
-既然不可能完全精确描述实数，那么如果我们对$X$做截断，只要求描述连续分布中$X$在小数点后的前若干位呢？等价地，我们研究当我们对$f(x)$做离散分割后得到的离散熵与微分熵的关系。取$\delta>0$，把$S$分割为$[n\delta,(n+1)\delta]$的区间，在每个区间上根据积分中值定理都有$\delta\cdot f(\xi_n)=\displaystyle\int_{n\delta}^{(n+1)\delta} f(x)\d x$，令离散随机变量$X^{(\delta)}=\xi_n$，如果$X\in [n\delta,(n+1)\delta]$。显然，$p(X^{(\delta)})=f(\xi_n)\delta$，那么$H(X^{(\delta)})=-\sum\limits_{n}f(\xi_n)\delta\cdot \log(f(\xi_n)\delta)$$=-\sum\limits_{n}f(\xi_n)\delta\cdot \log(f(\xi_n))-\sum\limits_{n}f(\xi_n)\delta\cdot \log\delta$，因为$\sum\limits_{n}f(\xi_n)\delta=1$，所以得到$\sum\limits_{n}f(\xi_n)\delta\cdot \log(f(\xi_n))-\log\delta$，当$n\to\infty$时前者就是$h(X)$。由此，$H(X^{(\delta)})=h(X)-\log\delta$。可见微分熵可以理解为$H(X^{(\delta)})+\log\delta$，也即如果用精度为$\delta$的离散变量来逼近，离散熵总是等于微分熵加上一个$-\log\delta$的项。当$\delta\to 0$时，$-\log\delta\to+\infty$。
+既然不可能完全精确描述实数，那么如果我们对$X$做截断，只要求描述连续分布中$X$在小数点后的前若干位呢？等价地，我们研究当我们对$f(x)$做离散分割后得到的离散熵与微分熵的关系。取$\delta>0$，把$S$分割为$[n\delta,(n+1)\delta]$的区间，在每个区间上根据积分中值定理都有$\delta\cdot f(\xi_n)=\displaystyle\int_{n\delta}^{(n+1)\delta} f(x)\d x$，令离散随机变量$X^{(\delta)}=\xi_n$，如果$X\in [n\delta,(n+1)\delta]$。显然，$p(X^{(\delta)})=f(\xi_n)\delta$，那么$H(X^{(\delta)})=-\sum\limits_{n}f(\xi_n)\delta\cdot \log(f(\xi_n)\delta)$ $=-\sum\limits_{n}f(\xi_n)\delta\cdot \log(f(\xi_n))-\sum\limits_{n}f(\xi_n)\delta\cdot \log\delta$，因为$\sum\limits_{n}f(\xi_n)\delta=1$，所以得到$\sum\limits_{n}f(\xi_n)\delta\cdot \log(f(\xi_n))-\log\delta$，当$n\to\infty$时前者就是$h(X)$。由此，$H(X^{(\delta)})=h(X)-\log\delta$。可见微分熵可以理解为$H(X^{(\delta)})+\log\delta$，也即如果用精度为$\delta$的离散变量来逼近，离散熵总是等于微分熵加上一个$-\log\delta$的项。当$\delta\to 0$时，$-\log\delta\to+\infty$。
 
 $\newcommand{\E}{\mathbb{E}}$由于大数定理对连续情形依然成立，所以我们对于渐进均分性(AEP)以及典型集的讨论都可以继承离散的情形。$-\dfrac{1}{n}\log f(X_1,\cdots,X_n)\to \E[-\log f(X)]=h(f)$。关于典型集，唯一需要修改的是，集合的“大小”现在是无穷大。而如果采用相同的论证，就必须把$\sum\limits_{x}$替换成$\displaystyle\int_{S}\d x$。因此我们定义集合$A$的体积为$\text{Vol}(A)=\displaystyle\int_{A}\d x$，那么再次得到$\Pr(A_\epsilon^{(n)})>1-\epsilon$，$2^{n(h(X)+\epsilon)}\leq \text{Vol}(A_\epsilon^{(n)})\leq (1-\epsilon)2^{n(h(X)-\epsilon)}$。由此可见，微分熵的另一个直观含义在于它刻画了典型集的大小。微分熵越大，典型集越大，随机变量的分布越松散。可见，微分熵依旧在刻画随机变量的“不确定性”，但是在连续意义下不能用信息位数来理解不确定性。
 
@@ -16,9 +16,9 @@ $\newcommand{\E}{\mathbb{E}}$由于大数定理对连续情形依然成立，所
 
 ### 微分熵的线性变换
 
-对于离散随机变量，如果令$X$变为$X+c$，那么分布不会改变，因此熵不变。而对于连续随机变量，加一个常数相当于概率密度函数的平移，而由于概率密度函数是在整条实轴上取值的，这其实是改变了概率分布的。但我们可以计算得到平移是不改变微分熵的大小的：记$Y=X+c$，则$f_Y(x)=f_X(x+c)$。$h(Y)=-\displaystyle\int_{S_Y} f_Y(x)\log f_Y(x)\d x=-\displaystyle\int_{S_Y} f_X(x+c)\log f_X(x+c)\d x$$-\displaystyle\int_{S_X} f_X(x)\log f_X(x)\d x=h(X)$。
+对于离散随机变量，如果令$X$变为$X+c$，那么分布不会改变，因此熵不变。而对于连续随机变量，加一个常数相当于概率密度函数的平移，而由于概率密度函数是在整条实轴上取值的，这其实是改变了概率分布的。但我们可以计算得到平移是不改变微分熵的大小的：记$Y=X+c$，则$f_Y(x)=f_X(x+c)$。$h(Y)=-\displaystyle\int_{S_Y} f_Y(x)\log f_Y(x)\d x=-\displaystyle\int_{S_Y} f_X(x+c)\log f_X(x+c)\d x$ $-\displaystyle\int_{S_X} f_X(x)\log f_X(x)\d x=h(X)$。
 
-而如果令$X$变为$aX$，微分熵是会改变的：记$Y=aX$，则$f_Y(x)=\dfrac{1}{|a|}f_X(\dfrac{x}{a})$。$h(Y)=-\displaystyle\int_{S_Y} f_Y(x)\log f_Y(x)\d x$$=-\displaystyle\int_{S_Y} \dfrac{1}{|a|}f_X(\dfrac{x}{a})\log \left[\dfrac{1}{|a|}f_X(\dfrac{x}{a})\right]\d x$$=-\displaystyle\int_{S_Y} \dfrac{1}{|a|}f_X(\dfrac{x}{a})\log \dfrac{1}{|a|}\d x-\displaystyle\int_{S_Y} \dfrac{1}{|a|}f_X(\dfrac{x}{a})\log f_X(\dfrac{x}{a})\d x$$=\log |a|+h(X)$。这个结论可以推广至随机向量的情况：$h(AX)=H(X)+\log |\det A|$。
+而如果令$X$变为$aX$，微分熵是会改变的：记$Y=aX$，则$f_Y(x)=\dfrac{1}{|a|}f_X(\dfrac{x}{a})$。$h(Y)=-\displaystyle\int_{S_Y} f_Y(x)\log f_Y(x)\d x$ $=-\displaystyle\int_{S_Y} \dfrac{1}{|a|}f_X(\dfrac{x}{a})\log \left[\dfrac{1}{|a|}f_X(\dfrac{x}{a})\right]\d x$$=-\displaystyle\int_{S_Y} \dfrac{1}{|a|}f_X(\dfrac{x}{a})\log \dfrac{1}{|a|}\d x-\displaystyle\int_{S_Y} \dfrac{1}{|a|}f_X(\dfrac{x}{a})\log f_X(\dfrac{x}{a})\d x$ $=\log |a|+h(X)$。这个结论可以推广至随机向量的情况：$h(AX)=H(X)+\log |\det A|$。
 
 ### 信息图
 
@@ -36,7 +36,7 @@ $\newcommand{\E}{\mathbb{E}}$由于大数定理对连续情形依然成立，所
 
 ## 再论互信息
 
-在用离散熵近似微分熵时，我们有$H(X^{(\delta)})\to h(X)-\log\delta$。那么既然离散的互信息满足$I(X^{(\delta)},Y^{(\delta)})=H(X^{\delta})-H(X^{(\delta)}\mid Y^{(\delta)})$$\to h(X)-\log\delta-h(X\mid Y)+\log\delta$$=h(X)-h(X\mid Y)$$=I(X;Y)$，可见离散的互信息与连续的互信息是近似相等的。这给了我们一种用离散互信息理解连续互信息的方法：可以证明，对于连续随机变量$X,Y$，$I(X;Y)=\sup\limits_{\mathcal{P,Q}}\{ I([X]_{\mathcal{P}};[Y]_{\mathcal{Q}})\}$，其中$\mathcal{P,Q}$是对$X,Y$的任意离散划分。
+在用离散熵近似微分熵时，我们有$H(X^{(\delta)})\to h(X)-\log\delta$。那么既然离散的互信息满足$I(X^{(\delta)},Y^{(\delta)})=H(X^{\delta})-H(X^{(\delta)}\mid Y^{(\delta)})$ $\to h(X)-\log\delta-h(X\mid Y)+\log\delta$$=h(X)-h(X\mid Y)$ $=I(X;Y)$，可见离散的互信息与连续的互信息是近似相等的。这给了我们一种用离散互信息理解连续互信息的方法：可以证明，对于连续随机变量$X,Y$，$I(X;Y)=\sup\limits_{\mathcal{P,Q}}\{ I([X]_{\mathcal{P}};[Y]_{\mathcal{Q}})\}$，其中$\mathcal{P,Q}$是对$X,Y$的任意离散划分。
 
 
 
