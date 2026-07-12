@@ -98,12 +98,15 @@ function extractMacros(text: string): { cleaned: string; macros: Record<string, 
   return { cleaned, macros }
 }
 
-// Custom rehype plugin: render KaTeX math with dynamic macros
+// Custom rehype plugin: collect macros + render KaTeX math
+// Uses marker approach since rehype-stringify escapes raw HTML
 function rehypeKatexMacros() {
   return (tree: any, file: any) => {
     const macros = file.data.macros || {}
+    const rendered: string[] = []
+    file.data.rendered = rendered
 
-    visit(tree, (node: any) => {
+    visit(tree, (node: any, index: number | null, parent: any) => {
       if (node.type !== 'element' || node.tagName !== 'code') return
       const classes: string[] = node.properties?.className || []
       const isInline = classes.includes('math-inline')
@@ -124,16 +127,25 @@ function rehypeKatexMacros() {
           trust: true,
           strict: false,
         })
-        // Replace the <code> node content with rendered KaTeX HTML
-        node.tagName = 'span'
-        node.properties.className = null
-        firstChild.type = 'raw'
-        firstChild.value = html
+        // Replace <code> with text marker — we'll swap in the real HTML after stringify
+        if (parent && typeof index === 'number') {
+          const marker = `KATEXMK${rendered.length}END`
+          rendered.push(isDisplay ? `\n${html}\n` : html)
+          parent.children[index] = { type: 'text', value: marker }
+        }
       } catch {
         // leave as-is on error
       }
     })
   }
+}
+
+// Post-process: swap markers back to KaTeX HTML
+function restoreKatex(html: string, rendered: string[]): string {
+  return html.replace(/KATEXMK(\d+)END/g, (_, i) => {
+    const idx = parseInt(i)
+    return rendered[idx] || ''
+  })
 }
 
 // Mirrors NextChat's approach: AST-level math handling avoids regex issues
@@ -275,7 +287,9 @@ app.get('/api/notes/content', async (req, res) => {
       value: cleaned,
       data: { macros },
     })
-    const html = String(result)
+    let html = String(result)
+    // Swap KaTeX markers back to real HTML
+    html = restoreKatex(html, (result.data as any).rendered || [])
 
     // Derive category from directory path
     const dirParts = path.dirname(notePath).split(path.sep)
