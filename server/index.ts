@@ -9,7 +9,8 @@ import remarkMath from 'remark-math'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 import remarkRehype from 'remark-rehype'
-import rehypeKatex from 'rehype-katex'
+import katex from 'katex'
+import { visit } from 'unist-util-visit'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 
@@ -69,6 +70,72 @@ function checkAuth(req: express.Request): boolean {
 }
 
 // ---- Markdown → HTML pipeline (unified + remark + rehype) ----
+
+// Extract \newcommand{\cmd}{def} from within math environments only
+function extractMacros(text: string): { cleaned: string; macros: Record<string, string> } {
+  const macros: Record<string, string> = {}
+
+  function stripNewcommand(match: string): string {
+    return match.replace(/\\newcommand\{(\\[^}]+)\}\{([^}]*)\}/g, (_, cmd: string, def: string) => {
+      macros[cmd] = def
+      return ''
+    })
+  }
+
+  // $$...$$ display math
+  let cleaned = text.replace(/\$\$([\s\S]*?)\$\$/g, stripNewcommand)
+  // $...$ inline math
+  cleaned = cleaned.replace(/(?<!\$)\$(?!\$)([^$]+?)\$(?!\$)/g, stripNewcommand)
+  // \[...\] display LaTeX
+  cleaned = cleaned.replace(/\\\[([\s\S]*?)\\\]/g, stripNewcommand)
+  // \(...\) inline LaTeX
+  cleaned = cleaned.replace(/\\\(([\s\S]*?)\\\)/g, stripNewcommand)
+
+  // Clean up math blocks left empty after newcommand removal
+  cleaned = cleaned.replace(/\$\$(?:\s*\n?)*\$\$/g, '')
+  cleaned = cleaned.replace(/\$\$/g, '')
+
+  return { cleaned, macros }
+}
+
+// Custom rehype plugin: render KaTeX math with dynamic macros
+function rehypeKatexMacros() {
+  return (tree: any, file: any) => {
+    const macros = file.data.macros || {}
+
+    visit(tree, (node: any) => {
+      if (node.type !== 'element' || node.tagName !== 'code') return
+      const classes: string[] = node.properties?.className || []
+      const isInline = classes.includes('math-inline')
+      const isDisplay = classes.includes('math-display')
+      if (!isInline && !isDisplay) return
+
+      const firstChild = node.children?.[0]
+      if (!firstChild || firstChild.type !== 'text') return
+
+      const tex = String(firstChild.value || '').trim()
+      if (!tex) return
+
+      try {
+        const html = katex.renderToString(tex, {
+          displayMode: isDisplay,
+          throwOnError: false,
+          macros,
+          trust: true,
+          strict: false,
+        })
+        // Replace the <code> node content with rendered KaTeX HTML
+        node.tagName = 'span'
+        node.properties.className = null
+        firstChild.type = 'raw'
+        firstChild.value = html
+      } catch {
+        // leave as-is on error
+      }
+    })
+  }
+}
+
 // Mirrors NextChat's approach: AST-level math handling avoids regex issues
 const processor = unified()
   .use(remarkParse)       // Parse markdown → mdast
@@ -76,7 +143,7 @@ const processor = unified()
   .use(remarkGfm)         // GFM: tables, strikethrough, task lists, autolinks
   .use(remarkBreaks)      // Single newline → hard break
   .use(remarkRehype)      // mdast → hast
-  .use(rehypeKatex)       // Render math nodes → KaTeX HTML
+  .use(rehypeKatexMacros) // Render math with \newcommand macros
   .use(rehypeHighlight)   // Code syntax highlighting
   .use(rehypeStringify)   // Serialize → HTML string
 
@@ -203,7 +270,11 @@ app.get('/api/notes/content', async (req, res) => {
 
     const raw = fs.readFileSync(fullPath, 'utf-8')
     const escaped = escapeBrackets(raw)
-    const result = await processor.process(escaped)
+    const { cleaned, macros } = extractMacros(escaped)
+    const result = await processor.process({
+      value: cleaned,
+      data: { macros },
+    })
     const html = String(result)
 
     // Derive category from directory path
